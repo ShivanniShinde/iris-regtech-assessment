@@ -79,9 +79,7 @@ CROSS JOIN LATERAL (
   ) AS e(eid, ename, etype, eregion, estate)
   ORDER BY random() LIMIT 1
 ) AS ent;
--- ============================================================
--- STEP 2: Populate non_xbrl_returns with 500,000 rows
--- ============================================================
+
 INSERT INTO non_xbrl_returns (
   return_id, entity_id, entity_name, return_type,
   submission_format, due_date, actual_submission,
@@ -154,9 +152,7 @@ CROSS JOIN LATERAL (
   ORDER BY random() LIMIT 1
 ) AS ent;
 
--- ============================================================
--- Verification query - run after both steps complete
--- ============================================================
+
 SELECT 'xbrl_submissions' AS tbl, COUNT(*) FROM xbrl_submissions
 UNION ALL
 SELECT 'non_xbrl_returns', COUNT(*) FROM non_xbrl_returns;

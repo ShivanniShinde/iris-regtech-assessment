@@ -48,15 +48,10 @@ status = 'Accepted'
 -- ============================================================
 -- Extending Rule 1 to a true multi-tenant dynamic clause
 -- ============================================================
--- The current clause resolves a SINGLE attribute value per user. To
--- support analysts who legitimately oversee more than one regulator
--- (e.g. a cross-regulator reviewer), model regulator_scope as a
--- comma-delimited or multi-row user_attribute and keep the IN (...)
--- subquery as-is — it already returns a set, not a scalar, so multiple
--- rows under the same key naturally extend to multiple regulators with
--- no clause change. For org-hierarchy-aware scoping (e.g. "see your
--- region AND every region under it"), replace the flat user_attribute
--- lookup with a join against a small region_hierarchy mapping table,
--- keyed by the same current_username() lookup, so the WHERE clause
--- still resolves to a single deterministic subquery Superset can inject
--- into every generated chart query.
+
+-- The current implementation is designed to resolve a single attribute value for each user.
+-- To support users who are responsible for multiple regulators—such as cross-regulator reviewers—the regulator_scope attribute can be stored as multiple records (or as a multi-valued attribute).
+-- Since the existing IN subquery already returns a set of values, it can naturally handle multiple regulators without requiring any changes to the clause itself.
+
+-- For more advanced scenarios, such as hierarchical access where a user should be able to view data for their assigned region as well as all subordinate regions, the attribute lookup can be extended through a join with a region_hierarchy mapping table. The hierarchy would still be driven by the current user's identity, ensuring that the subquery remains deterministic and can be consistently applied by Superset across all generated chart queries.
+
